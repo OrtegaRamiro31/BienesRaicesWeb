@@ -7,6 +7,6 @@ use App\Propiedad;
 
 $propiedad = new Propiedad;
 
-var_dump($propiedad);
-echo "<br>";
-var_dump(__DIR__.'/../vendor/autoload.php');
+// var_dump($propiedad);
+// echo "<br>";
+// var_dump(__DIR__.'/../vendor/autoload.php');
