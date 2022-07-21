@@ -1,0 +1,17 @@
+{
+    "name": "ramiro/05bienesraices",
+    "description": "Creando un proyecto con POO",
+    "type": "project",
+    "authors": [
+        {
+            "name": "OrtegaRamiro31",
+            "email": "ceinnova13458@innovaccion.mx"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "./classes"
+        }
+    }
+}

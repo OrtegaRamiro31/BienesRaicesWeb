@@ -8,7 +8,7 @@ if (!$id) {
 }
 
 // Importar instancia de BD
-require 'includes/config/database.php';
+require 'includes/app.php';
 $db = conectarBD();
 
 // Escribir el query
@@ -31,7 +31,6 @@ if ($consulta->num_rows === 0) {             // num_rows lo encontramos en $cons
 $resultado = mysqli_fetch_assoc($consulta);
 
 
-require 'includes/funciones.php';
 incluirTemplate('header');
 ?>
 <main class="contenedor seccion contenido-centrado">
