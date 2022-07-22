@@ -40,7 +40,7 @@ class Propiedad
         $this->wc = $args['wc'] ?? '';
         $this->estacionamiento = $args['estacionamiento'] ?? '';
         $this->creado = date('Y/m/d');
-        $this->vendedores_id = $args['vendedores_id'] ?? '';
+        $this->vendedores_id = $args['vendedores_id'] ?? 1;
     }
 
     public function guardar()
@@ -129,9 +129,9 @@ class Propiedad
             self::$errores[] = "El número de lugares de estacionamiento es Obligatorio";
         }
 
-        if (!$this->vendedores_id) {
-            self::$errores[] = "Elige un vendedor";
-        }
+        // if (!$this->vendedores_id) {
+        //     self::$errores[] = "Elige un vendedor";
+        // }
 
         if (!$this->imagen) {
             self::$errores[] = "La imagen es Obligatoria";
@@ -141,5 +141,42 @@ class Propiedad
         // }
 
         return self::$errores;
+    }
+
+    // Lista todas las propiedades
+    public static function all() {
+        $query = "SELECT * FROM propiedades";
+
+        $resultado =  self::consultarSQL($query);
+
+        return $resultado;
+    }
+
+    public static function consultarSQL($query) {
+        // Consultar la BD
+        $resultado = self::$db->query($query);
+
+        // Iterar los resultados
+        $array = [];
+        while($registro = $resultado->fetch_assoc()) {
+            $array[] = self::crearObjeto($registro);
+        }
+
+        // Liberar la memoria
+        $resultado->free();
+
+        // Retornar los resultados
+        return $array;
+    }
+
+    protected static function crearObjeto($registro) {
+        $objeto = new self;                     // Con esto hacemos referencia a crearemos objetos de la clase Propiedad
+
+        foreach($registro as $key => $value) {
+            if (property_exists($objeto, $key)) {
+                $objeto->$key = $value;
+            }
+        }
+        return $objeto;
     }
 }
