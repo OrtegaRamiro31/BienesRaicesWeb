@@ -4,6 +4,8 @@
 // __DIR__ es una super global, nos traerá una ruta muy específica hacia la carpeta que queremos usar.
 define('TEMPLATES_URL', __DIR__ . '/templates');
 define('FUNCIONES_URL', __DIR__ . 'funciones.php');
+define('CARPETA_IMAGENES', __DIR__ . '/../imagenes/');
+
 function incluirTemplate(string $nombre, bool $inicio = false)
 {
 
