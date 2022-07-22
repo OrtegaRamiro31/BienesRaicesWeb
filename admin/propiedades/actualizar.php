@@ -50,7 +50,9 @@
         }
 
         // Revisar que el arreglo de errores esté vacío
-        if (empty($errores)) {   
+        if (empty($errores)) { 
+            // Almacenar la imágen
+            $image->save(CARPETA_IMAGENES . $nombreImagen);
             $resultado = $propiedad->guardar();
         }
     }
