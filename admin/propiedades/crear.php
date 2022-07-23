@@ -18,7 +18,6 @@ $resultado = mysqli_query($db, $consulta);
 // Arreglo con mensajes de errores
 $errores = Propiedad::getErrores();
 
-
 //  Ejecutar el código después de que el usuario envía el formulario
 // Con este if comprobamos cuando estemos usando el método POST. 
 // $_SERVER es una superglobal para obtener detalles acerca del servidor
@@ -47,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validar
     $errores = $propiedad->validar();
 
-
+    // debuguear($propiedad);
     // Revisar que el arreglo de errores esté vacío
     if (empty($errores)) {
 
@@ -59,18 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Guarda la imagen en el servidor.
         $image->save(CARPETA_IMAGENES . $nombreImagen);
 
+        
         // Guarda en la base de datos
-        $resultado = $propiedad->guardar();
+        $propiedad->guardar();
 
         // Mensaje de éxito o error
 
-        // En caso de que todo sea correcto regresamos al usuario a la página admin.php.
-        if ($resultado) {
-            // Redireccionar al usuario. Solo se debe hacer si no hay código HTML previo
-            // /admin hace referencia a la carpeta. ? significa que usaremos un query string
-            // El resto son elementos Clave-Valor
-            header('Location: /admin?resultado=1');
-        }
+
     }
 }
 

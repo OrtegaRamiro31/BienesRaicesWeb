@@ -31,7 +31,7 @@ class Propiedad
 
     public function __construct($args = [])
     {
-        $this->id = $args['id'] ?? '';
+        $this->id = $args['id'] ?? null;
         $this->titulo = $args['titulo'] ?? '';              // Todo lo que sea public se accede con $this y no se agrega el simobolo $
         $this->precio = $args['precio'] ?? '';
         $this->imagen = $args['imagen'] ?? '';
@@ -45,7 +45,7 @@ class Propiedad
 
     public function guardar()
     {
-        if (isset($this->id)) {
+        if (!is_null($this->id)) {
             // Actualizar
             $this->actualizar();
         } else {
@@ -67,11 +67,18 @@ class Propiedad
         $query .= " ) VALUES ( '";
         $query .= join("', '", array_values($atributos));
         $query .= " ') ";
-        // debuguear($query);
 
         $resultado = self::$db->query($query);
 
-        return $resultado;
+        // En caso de que todo sea correcto regresamos al usuario a la página admin.php.
+        if ($resultado) {
+            // Redireccionar al usuario. Solo se debe hacer si no hay código HTML previo
+            // /admin hace referencia a la carpeta. ? significa que usaremos un query string
+            // El resto son elementos Clave-Valor
+            header('Location: /admin?resultado=1');
+        }
+
+        // return $resultado;
     }
 
     public function actualizar()
@@ -102,6 +109,20 @@ class Propiedad
         // return $resultado;
     }
 
+    // Eliminar un registro
+    public function eliminar()
+    {
+        // Eliminar la propiedad
+        $query = "DELETE FROM propiedades WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1";
+        $resultado = self::$db->query($query);
+
+        if ($resultado) {
+            $this->borrarImagen();
+            header('Location: /admin?resultado=3');
+        }
+        // debuguear($query);
+    }
+
     // Identificar y unir los atributos de la BD
     public function atributos()
     {
@@ -130,16 +151,22 @@ class Propiedad
     {
         // Elimina la imágen previa
 
-        if (isset($this->id)) {
-            $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
-
-            if ($existeArchivo) {
-                unlink(CARPETA_IMAGENES . $this->imagen);
-            }
+        if (!is_null($this->id)) {
+            $this->borrarImagen();
         }
         // Asignar al atributo de imagen el nombre de la imagen
         if ($imagen) {
             $this->imagen = $imagen;
+        }
+    }
+
+    // Eliminar el archivo
+    public function borrarImagen()
+    {
+        // Comprobar si existe el archvio
+        $existeArchivo = file_exists(CARPETA_IMAGENES . $this->imagen);
+        if ($existeArchivo) {
+            unlink(CARPETA_IMAGENES . $this->imagen);
         }
     }
 
@@ -158,8 +185,8 @@ class Propiedad
 
         if (!$this->precio) {
             self::$errores[] = "El precio es Obligatorio";
-        } else if (strlen(strval($this->precio)) > 10) {
-            self::$errores[] = "El precio debe tener menos de 10 dígitos";
+        } else if (strlen(strval($this->precio)) > 8) {
+            self::$errores[] = "El precio debe tener menos de 8 dígitos";
         }
 
         if (strlen($this->descripcion) < 50) {
